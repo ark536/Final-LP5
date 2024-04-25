@@ -1,0 +1,116 @@
+#include <iostream>
+#include <omp.h>
+#include <chrono>
+#include <random>
+#include <algorithm>
+
+using namespace std;
+
+// Function to perform bubble sort
+void bubbleSort(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(arr[j], arr[j + 1]);
+            }
+        }
+    }
+}
+
+// Function to perform merge sort
+void merge(int arr[], int l, int m, int r) {
+    int n1 = m - l + 1;
+    int n2 = r - m;
+
+    int L[n1], R[n2];
+
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[l + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[m + 1 + j];
+
+    int i = 0, j = 0, k = l;
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(int arr[], int l, int r) {
+    if (l >= r) return;
+    int m = l + (r - l) / 2;
+    mergeSort(arr, l, m);
+    mergeSort(arr, m + 1, r);
+    merge(arr, l, m, r);
+}
+
+int main() {
+    int n;
+    cout << "Enter the number of elements: ";
+    cin >> n;
+
+    int arr1[n], arr2[n];
+
+    // Generating random numbers
+    default_random_engine generator;
+    uniform_int_distribution<int> distribution(1, 1000);
+    for (int i = 0; i < n; i++) {
+        arr1[i] = distribution(generator);
+        arr2[i] = arr1[i];
+    }
+
+    // Sequential Bubble Sort
+    auto start_seq_bubble = chrono::steady_clock::now();
+    bubbleSort(arr1, n);
+    auto end_seq_bubble = chrono::steady_clock::now();
+    chrono::duration<double> elapsed_seq_bubble = end_seq_bubble - start_seq_bubble;
+
+    // Sequential Merge Sort
+    auto start_seq_merge = chrono::steady_clock::now();
+    mergeSort(arr2, 0, n - 1);
+    auto end_seq_merge = chrono::steady_clock::now();
+    chrono::duration<double> elapsed_seq_merge = end_seq_merge - start_seq_merge;
+
+    // Parallel Bubble Sort
+    auto start_par_bubble = chrono::steady_clock::now();
+    #pragma omp parallel
+    {
+        bubbleSort(arr1, n);
+    }
+    auto end_par_bubble = chrono::steady_clock::now();
+    chrono::duration<double> elapsed_par_bubble = end_par_bubble - start_par_bubble;
+
+    // Parallel Merge Sort
+    auto start_par_merge = chrono::steady_clock::now();
+    #pragma omp parallel
+    {
+        mergeSort(arr2, 0, n - 1);
+    }
+    auto end_par_merge = chrono::steady_clock::now();
+    chrono::duration<double> elapsed_par_merge = end_par_merge - start_par_merge;
+
+    cout << "Sequential Bubble Sort Time: " << elapsed_seq_bubble.count() << " seconds\n";
+    cout << "Sequential Merge Sort Time: " << elapsed_seq_merge.count() << " seconds\n";
+    cout << "Parallel Bubble Sort Time: " << elapsed_par_bubble.count() << " seconds\n";
+    cout << "Parallel Merge Sort Time: " << elapsed_par_merge.count() << " seconds\n";
+
+    return 0;
+}
