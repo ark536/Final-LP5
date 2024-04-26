@@ -1,0 +1,20 @@
+Includes:
+The code includes <iostream> for standard input-output operations and <omp.h> for OpenMP (Open Multi-Processing) operations.
+It also includes <climits> to use predefined constants for minimum and maximum integer values.
+Function definitions:
+min_reduction: This function finds the minimum value in an array using OpenMP parallelization with a reduction clause.
+max_reduction: This function finds the maximum value in an array using OpenMP parallelization with a reduction clause.
+sum_reduction: This function calculates the sum of all elements in an array using OpenMP parallelization with a reduction clause.
+average_reduction: This function calculates the average of all elements in an array using OpenMP parallelization with a reduction clause. Note: There's a mistake in this function where it divides by (n-1) instead of n, which would lead to incorrect average calculation.
+main() function:
+It starts by prompting the user to enter the total number of elements.
+Dynamically allocates memory for an array of integers based on the user input.
+Prompts the user to enter the elements of the array.
+Calls the four reduction functions (min_reduction, max_reduction, sum_reduction, and average_reduction) passing the array and its size.
+The program ends after printing the minimum, maximum, sum, and average values of the array.
+Overall, this code demonstrates how to perform reduction operations (finding minimum, maximum, sum, and average) on an array using OpenMP parallelization techniques, which can improve performance by utilizing multiple threads.
+
+
+
+
+
