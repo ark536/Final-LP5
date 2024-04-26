@@ -1,0 +1,30 @@
+Sure, let's break down the code step by step:
+
+Includes and defines:
+The code includes necessary headers like <iostream> and <bits/stdc++.h> for standard input-output operations and random number generation respectively.
+It also includes <cuda.h> for CUDA (Compute Unified Device Architecture) operations.
+The BLOCK_SIZE is defined as 16.
+Function definitions:
+fill_array: This function populates an array with random numbers between 0 and 99.
+add_cpu: This function performs element-wise addition of two arrays on the CPU.
+print_matrix: This function prints the elements of an array.
+Kernel function:
+__global__ void add: This is a CUDA kernel function responsible for performing element-wise addition of two arrays on the GPU. Each thread calculates one element of the result array.
+main() function:
+It starts by prompting the user to enter the size of the arrays.
+Dynamically allocates memory for three arrays: arr1_cpu, arr2_cpu, and result_cpu.
+Populates arr1_cpu and arr2_cpu with random numbers.
+Dynamically allocates memory for three GPU arrays: arr1_gpu, arr2_gpu, and result_gpu using cudaMallocManaged(). This memory allocation allows for Unified Memory, which simplifies memory management between the CPU and GPU.
+Copies data from CPU arrays to GPU arrays using cudaMemcpy().
+Creates CUDA events start and stop for measuring GPU execution time.
+Defines CUDA grid and block dimensions. Grid and block dimensions determine how CUDA threads are organized.
+Records the start event.
+Launches the CUDA kernel function add with specified grid and block dimensions.
+Records the stop event.
+Calculates the elapsed time using CUDA events.
+Copies the result from the GPU to the CPU using cudaMemcpy().
+Prints the GPU result and its execution time.
+Frees memory allocated on the GPU using cudaFree().
+Repeats the process for CPU addition, measuring its execution time.
+The program ends by returning 0.
+Overall, this code demonstrates how to perform vector addition using both CPU and GPU, and measures the execution time for comparison.
